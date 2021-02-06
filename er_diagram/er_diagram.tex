@@ -1,0 +1,52 @@
+\documentclass[12pt]{article}
+\usepackage{tikz-er2}
+\usepackage[landscape,margin=1cm]{geometry}
+\usetikzlibrary{shadows,positioning}
+
+% template from https://tex.stackexchange.com/questions/164368/drawing-the-e-r-diagram-tikz-diagram-overflowing
+
+\begin{document}
+\pagenumbering{gobble}
+
+\tikzset{every entity/.style = {top color=white,bottom color=blue!30,draw=blue!50!black!100,drop shadow},
+every attribute/.style = {top color=white, bottom color=yellow!20,draw=yellow, drop shadow},
+every relationship/.style = {top color=white, bottom color=red!20,draw=red!50!black!100, drop shadow},
+every edg/.style={link},
+every isa/.style = {top color=white, bottom color=green!20,draw=green!50!black!100, drop shadow}
+}
+
+\centering
+\resizebox{0.8\textwidth}{!}{%
+
+
+\begin{tikzpicture}[scale=0.5]
+    \node[entity] (users) {User};
+        \node[attribute] (userid) [above = 2em of users] {\key{userid}} edge (users);
+        \node[attribute] (name) [above left = 2em of users] {name} edge (users);
+        \node[attribute] (yelping_since)  [left = 2em of users] {yelping\_since} edge (users);
+    \node[relationship] (reviews) [above right = 2cm of users] {Reviews} edge [] node[above ]{} (users) ;
+        \node[attribute] (timestamp) [above left = 2em of reviews] {timestamp} edge (reviews);
+        \node[attribute] (description) [above = 2em of reviews] {description} edge (reviews);
+        \node[attribute] (rating) [above right = 2em of reviews] {rating} edge (reviews);
+    \node[entity] (businesses) [below right = 2cm of reviews] {Business} edge [] node[above ]{} (reviews);
+        \node[attribute] (businessid) [above = 2em of businesses] {\key{businessid}} edge (businesses);
+        \node[attribute] (name) [below = 2em of businesses] {name} edge (businesses);
+    \node[relationship] (tips) [below left = 2cm of businesses] {Tips} edge [] node[above ]{} (businesses) edge[] node[above ]{}(users) ;
+        \node[attribute] (timestamp) [below left = 2em of tips] {timestamp} edge (tips);
+    \node[entity] (tipinfo) [below = 1cm of tips] {TipInfo} edge [] node[above ]{} (tips);
+        \node[attribute] (tipid) [below = 2em of tipinfo] {\key{tipid}} edge (tipinfo);
+        \node[attribute] (phrase) [below left = 2em of tipinfo] {phrase} edge (tipinfo);
+    \node[relationship] (hasphoto) [below right = 2cm of businesses] {HasPhoto} edge [] node[above ]{} (businesses) ;
+    \node[entity] (photos) [right = 2em of hasphoto] {Photo} edge [total, arrow] node[above ]{} (hasphoto);
+        \node[attribute] (photoid) [below = 2em of photos] {\key{photoid}} edge (photos);
+        \node[attribute] (caption) [below right = 2em of photos] {caption} edge (photos);
+        \node[attribute] (pngimage) [right = 2em of photos] {png\_image} edge (photos);
+    \node[relationship] (hascategory) [above right = 2cm of businesses] {HasCategory} edge [total] node[above ]{} (businesses) ;
+    \node[entity] (categories) [right = 2em of hascategory] {Category} edge [] node[above ]{} (hascategory);
+        \node[attribute] (categoryid) [below = 2em of categories] {\key{categoryid}} edge (categories);
+        \node[attribute] (name) [below right = 2em of categories] {name} edge (categories);
+\end{tikzpicture}
+
+}
+
+\end{document}
